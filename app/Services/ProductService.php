@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Repositories\ProductRepository;
 use App\Jobs\StoreProductJob;
 use App\Models\Product;
+use App\Actions\StoreBase64File;
 
 class ProductService
 {
@@ -27,11 +28,20 @@ class ProductService
 
     public function create(array $data): Product
     {
+        if(isset($data['image'])) {
+            $data['image_url'] = (new StoreBase64File($data['image']))->handle();
+        }
+
         return $this->productRepository->create($data);
     }
 
     public function update(Product $product, array $data): Product
     {
+        if(isset($data['image'])) {
+            $image = (new StoreBase64File($data['image']))->handle();
+            $data['image_url'] = $image;
+        }
+
         return $this->productRepository->update($product, $data);
     }
 

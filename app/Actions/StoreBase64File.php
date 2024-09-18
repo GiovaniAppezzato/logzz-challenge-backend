@@ -34,7 +34,7 @@ class StoreBase64File extends Action
     {
         Storage::disk('public')->put('products/' . $fileName, $fileContent);
 
-        return Storage::url('products/' . $fileName);
+        return url(Storage::url('products/' . $fileName));
     }
 
     private function getMimeType()
