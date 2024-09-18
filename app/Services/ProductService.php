@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use App\Repositories\ProductRepository;
@@ -14,7 +15,7 @@ class ProductService
         protected ProductRepository $productRepository
     ) {}
 
-    public function getProducts(?string $term): LengthAwarePaginator
+    public function getProducts(?string $term): LengthAwarePaginator|Collection
     {
         return $this->productRepository->getProductsWithPagination($term);
     }
@@ -41,14 +42,19 @@ class ProductService
 
     public static function importProductsFromExternalApi(string $url): void
     {
-        try {
-            $response = Http::get($url);
+        $response = Http::get($url);
 
-            foreach ($response->json() as $product) {
-                StoreProductJob::dispatch($product);
+        if($response->successful()) {
+            $json = $response->json();
+
+            // Check if the response is a single product or multiple products
+            if (isset($json['id'])) {
+                StoreProductJob::dispatch($json);
+            } else {
+                foreach ($json as $product) {
+                    StoreProductJob::dispatch($product);
+                }
             }
-        } catch (\Exception $e) {
-            throw new \Exception('Failed to import products from the external API.');
         }
     }
 }

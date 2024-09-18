@@ -12,7 +12,7 @@ class ImportProducts extends Command
      *
      * @var string
      */
-    protected $signature = 'products:import {id?}';
+    protected $signature = 'products:import {--id=*}';
 
     /**
      * The console command description.
@@ -27,10 +27,16 @@ class ImportProducts extends Command
     public function handle()
     {
         $baseUrl = 'https://fakestoreapi.com/products';
+        $optionIds = $this->option('id');
 
-        $url = $this->argument('id') ? $baseUrl . $this->argument('id') : $baseUrl;
-        ProductService::importProductsFromExternalApi($url);
+        if($optionIds) {
+            foreach ($optionIds as $id) {
+                ProductService::importProductsFromExternalApi($baseUrl . '/' . $id);
+            }
+        } else {
+            ProductService::importProductsFromExternalApi($baseUrl);
+        }
 
-        $this->info('Products added to the queue for processing');
+        $this->info('Product(s) added to the queue for processing');
     }
 }

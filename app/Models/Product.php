@@ -22,9 +22,12 @@ class Product extends Model
         'image_url'
     ];
 
+    /**
+     * The price attribute is stored in the database as cents, so we need to convert it to dollars when we retrieve it.
+     */
     public function getPriceAttribute($value)
     {
-        return number_format($value / 100, 2);
+        return $value / 100;
     }
 
     public function setPriceAttribute($value)

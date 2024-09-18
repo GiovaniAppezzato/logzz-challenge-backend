@@ -26,7 +26,7 @@ class StoreProductRequest extends FormRequest
             'description' => ['required', 'string'],
             'price'       => ['required', 'numeric', 'min:0'],
             'category'    => ['required', 'string', 'max:255'],
-            'image'       => ['required', new \App\Rules\Base64],
+            'image'       => ['nullable', new \App\Rules\Base64],
         ];
     }
 }

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->integer('price'); // in cents, to avoid floating point arithmetic issues
+            $table->integer('price')->default(0); // in cents, to avoid floating point arithmetic issues
             $table->text('description');
             $table->string('category');
             $table->string('image_url')->nullable();
