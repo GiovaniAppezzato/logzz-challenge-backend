@@ -1,81 +1,216 @@
-# Teste prático para Back-End 
-***
+<p align="center">
+    <a href="https://www.logzz.com.br" target="_blank"> 
+        <img src="./public/logzz.svg" width="200" style="margin-bottom: 30px;">    
+    </a>
+</p>
 
-Bem-vindo.
+## 📝 Introdução
 
-Usarei esse teste para avaliar tecnicamente todas as pessoas que estão participando do nosso processo seletivo para a vaga de desenvolvimento Back-End, lembrando que a aplicação de patterns como service e repository e processamento de filas assíncronas com horizon fazem diferença comente o seu código para facilitar a revisão o prazo de execução é de 3 dias corridos a partir do momento que o teste foi encaminhado para você, se tiver alguma duvida pergunte. o teste deve ter um read-me que explique o projeto e como rodá-lo.
+Olá! Este repositório contém a minha solução para o desafio da Logzz. Trata-se de um sistema simples de cadastro de produtos, com o comando para importar uma base de dados de outra api utilizando Laravel e Next.js.
 
-## TL;DR
+Se precisar entrar em contato, você pode me encontrar no [LinkedIn](https://www.linkedin.com/in/giovani-appezzato/), pelo e-mail giovani.appezzato@gmail.com ou no número (19) 99494-7867.
 
-- Você deverá criar um CRUD através de uma API REST com Laravel;
-- Você deverá criar um comando artisan que se comunicará com uma outra API para importar em seu banco de dados;
-- Você deverá criar o front-end do CRUD (Criação, Leitura, Atualização e Deleção) no sistema de gerenciamento de biblioteca. Você poderá escolher entre utilizar React ou Blade no front-end, junto com bibliotecas de estilização como Tailwind CSS ou Bootstrap.
-## Começando
+Deploy do frontend: https://giovani-appezzato-challenge-logzz.vercel.app/sign-in
 
-**Faça um fork desse projeto para iniciar o desenvolvimento. PRs não serão aceitos.**
+Deploy da api: https://logzz.giovani-appezzato.com.br/api/test-connection
 
-### Configuração do ambiente
+## 🚀 Começando
 
-**Setup laravel conforme a documentação pode usar qualquer opção usando 'Valet, artisan serve ou docker'.**
+Siga as **instruções** abaixo para configurar o ambiente e rodar o backend do projeto localmente. Existem duas formas de instalar o projeto: com Docker utilizando Laravel Sail e sem Docker.
 
-### Funcionalidades a serem implementadas
+### 📋 Pré-requisitos
 
-**Essa aplicação deverá se comportar como uma API REST, onde será consumida por outros sistemas. Nesse teste você deverá se preocupar em constriuir somente a API**. 
+Antes de começar, verifique se você possui as seguintes dependências instaladas. Caso contrário, faça o download e instale-as para prosseguir:
 
-##### CRUD produtos
+* [Git](https://git-scm.com/downloads) 
+* [NPM](https://www.npmjs.com/)
+* [Composer](https://getcomposer.org/)
+* [PHP ^8.2](https://www.php.net/releases/8.2/en.php)
+* [Docker (Opcional)](https://www.docker.com/)
 
-Aqui você deverá desenvolver as principais operações para o gerenciamento de um catálogo de produtos, sendo elas:
+### 🐳 Instalação (com Docker e Laravel Sail)
 
-- Criação
-- Atualização
-- Exclusão
+Se você optar por rodar o projeto usando Docker, essa é a abordagem recomendada, especialmente se estiver em um ambiente Linux. Para usuários do Windows, é necessário utilizar o [WSL 2 (Windows Subsystem for Linux)](https://learn.microsoft.com/pt-br/windows/wsl/install)  em conjunto com o Docker Desktop. Caso contrário, pule para a instalação do projeto sem o Docker.
 
-O produto deve ter a seguinte estrutura:
+1. Clone o repositório:
 
-Campo       | Tipo      | Obrigatório   | Pode se repetir
------------ | :------:  | :------:      | :------:
-id          | int       | true          | false
-name        | string    | true          | false        
-price       | float     | true          | true
-decription  | text      | true          | true
-category    | string    | true          | true
-image_url   | url       | false         | true
-
-Os endpoints de criação e atualização devem seguir o seguinte formato de payload:
-
-```json
-{
-    "name": "product name",
-    "price": 109.95,
-    "description": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    "category": "test",
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
-}
+``` bash
+git clone https://github.com/GiovaniAppezzato/logzz-challenge-backend
 ```
 
-**Importante:** Tanto os endpoints de criação é atualização, deverão ter uma camada de validação dos campos.
+2. Navegue até a pasta do projeto e execute o comando para instalar todas as dependências necessárias:
 
-##### Buscas de produtos
+``` bash
+composer install
+```
 
-Para realizar a manutenção de um catálogo de produtos é necessário que o sistema tenha algumas buscas, sendo elas:
+Caso não tenha o Composer instalado localmente, você pode utilizar o seguinte comando para instalar as dependências diretamente no container do Laravel Sail:
 
-- Busca pelos campos `name` e `category` (trazer resultados que batem com ambos os campos).
-- Busca por uma categoria específica.
-- Busca de produtos com e sem imagem.
-- Buscar um produto pelo seu ID único.
+```
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php82-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-##### Importação de produtos de uma API externa
+3. Crie o arquivo de configuração copiando o exemplo fornecido:
 
-É necessário que o sistema seja capaz de importar produtos que estão em um outro serviço. Deverá ser criado um comando que buscará produtos nessa API e armazenará os resultados para a sua base de dados. 
+``` bash
+cp .env.example .env
+```
 
-Sugestão: `php artisan products:import`
+4. Abra o arquivo `.env` e configure as variáveis de ambiente conforme necessário. Certifique-se de configurar corretamente as informações necessárias para a aplicação:
 
-Esse comando deverá ter uma opção de importar um único produto da API externa, que será encontrado através de um ID externo.
+``` bash
+APP_URL=http://localhost
+APP_PORT=8001
 
-Sugestão: `php artisan products:import --id=123`
+...
 
-Utilize a seguinte API para importar os produtos: [https://fakestoreapi.com/docs](https://fakestoreapi.com/docs)
+QUEUE_CONNECTION=database
 
----
+...
 
-Se houver dúvidas, por favor, abra uma issue nesse repositório.
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
+# FORWARD_DB_PORT=33062
+```
+
+Descomente a linha FORWARD_DB_PORT caso já tenha um MySQL rodando na porta 3306 da sua máquina.
+
+
+5. Inicie os containers Docker usando o Laravel Sail:
+
+``` bash
+./vendor/bin/sail up -d
+```
+
+6. Crie a APP_KEY do projeto:
+
+``` bash
+./vendor/bin/sail artisan key:generate
+```
+
+7. Execute as migrations para criar as tabelas no banco de dados:
+
+``` bash
+./vendor/bin/sail artisan migrate
+```
+
+8. Crie um link simbólico para visualizar os uploads pelo frontend:
+
+``` bash
+./vendor/bin/sail artisan storage:link
+```
+
+9. Inicie os workers com o comando abaixo:
+
+``` bash
+./vendor/bin/sail artisan queue:work
+```
+
+10. Para finalizar, importe os dados via comando customizado proposto pelo teste:
+
+``` bash
+./vendor/bin/sail artisan products:import  
+
+# Ou
+
+./vendor/bin/sail artisan products:import --id=1
+```
+
+11. Pronto! o projeto estará rodando em um ambiente Dockerizado, pronto para ser utilizado localmente acessando o [localhost](http://localhost:8001)
+
+### 🔧 Instalação (sem Docker)
+
+1. Clone o repositório:
+
+``` bash
+git clone https://github.com/GiovaniAppezzato/logzz-challenge-backend
+```
+
+2. Instale as dependências necessárias:
+
+``` bash
+composer install
+```
+
+3. Crie o arquivo de configuração copiando o exemplo fornecido:
+
+``` bash
+cp .env.example .env
+```
+
+4. Abra o arquivo `.env` e configure as variáveis de ambiente conforme necessário. Certifique-se de configurar corretamente as informações do banco de dados:
+
+``` bash
+QUEUE_CONNECTION=database
+
+...
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Como alternativa, você pode usar o banco de dados local [SQLite](https://www.sqlite.org/):
+
+``` bash
+DB_CONNECTION=sqlite
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=laravel
+# DB_USERNAME=root
+# DB_PASSWORD=
+```
+
+5. Crie a APP_KEY do projeto:
+
+``` bash
+php artisan key:generate
+```
+
+6. Execute as migrations para criar as tabelas no banco de dados:
+
+``` bash
+php artisan migrate
+```
+
+7. Crie um link simbólico para conseguir visualizar os uploads:
+
+``` bash    
+php artisan storage:link
+```
+
+8. Inicie os workers com o comando abaixo:
+
+``` bash
+php artisan queue:work
+```
+
+9. Para finalizar, importe os dados via comando customizado proposto pelo teste:
+
+``` bash
+php artisan products:import  
+
+# Ou
+
+php artisan products:import --id=1
+```
+
+10. Inicie o servidor local do Laravel:
+
+``` bash
+php artisan serve
+```
+
+11. Pronto! O projeto estará rodando localmente no endereço IP fornecido pelo terminal após a inicialização do servidor.
