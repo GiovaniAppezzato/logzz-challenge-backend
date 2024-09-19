@@ -28,8 +28,10 @@ class ProductService
 
     public function create(array $data): Product
     {
-        if(isset($data['image'])) {
-            $data['image_url'] = (new StoreBase64File($data['image']))->handle();
+        $base64Image = $data['image'] ?? null;
+
+        if($base64Image) {
+            $data['image_url'] = (new StoreBase64File($base64Image))->handle();
         }
 
         return $this->productRepository->create($data);
@@ -37,9 +39,10 @@ class ProductService
 
     public function update(Product $product, array $data): Product
     {
+        $base64Image = $data['image'] ?? null;
+
         if(isset($data['image'])) {
-            $image = (new StoreBase64File($data['image']))->handle();
-            $data['image_url'] = $image;
+            $data['image_url'] = (new StoreBase64File($base64Image))->handle();
         }
 
         return $this->productRepository->update($product, $data);

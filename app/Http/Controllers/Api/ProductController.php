@@ -17,9 +17,7 @@ class ProductController extends Controller
 
     public function index(GetProductsRequest $request)
     {
-        return ProductResource::collection(
-            $this->productService->getProducts($request->input('term', null))
-        );
+        return ProductResource::collection($this->productService->getProducts($request->input('term', null)));
     }
 
     public function store(StoreProductRequest $request)
